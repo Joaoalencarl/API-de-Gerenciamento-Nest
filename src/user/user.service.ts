@@ -4,10 +4,16 @@ import * as bcrypt from 'bcrypt';
 import { PrismaService } from '../prisma/prisma.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { User } from './entities/user.entity';
+import { UpdateUserDto } from './dto/update-user.dto';
 
 @Injectable()
 export class UserService {
   constructor(private readonly prisma: PrismaService) {}
+
+  //Auth Service
+  findByEmail(email: string) {
+    return this.prisma.user.findUnique({ where: { email } });
+  }
 
   async create(createUserDto: CreateUserDto): Promise<User> {
     const data: Prisma.UserCreateInput = {
@@ -23,7 +29,23 @@ export class UserService {
     };
   }
 
-  findByEmail(email: string) {
-    return this.prisma.user.findUnique({ where: { email } });
+  async findAll() {
+    return this.prisma.user.findMany();
+  }
+
+  async findOne(id: number) {
+    return this.prisma.user.findUnique({ where: { id } });
+  }
+
+  async update(id: number, data: UpdateUserDto) {
+    if (data.password) {
+      data.password = await bcrypt.hash(data.password, 10);
+      return this.prisma.user.update({ where: { id }, data });
+    }
+    return this.prisma.user.update({ where: { id }, data });
+  }
+
+  async remove(id: number) {
+    return this.prisma.user.delete({ where: { id } });
   }
 }
