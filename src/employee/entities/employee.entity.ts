@@ -2,7 +2,7 @@ import { Sex } from '@prisma/client';
 
 export class Employee {
   id: number;
-  playfab_id: number | null;
+  playfab_id: string | null;
   name: string;
   email: string;
   cpf: string;

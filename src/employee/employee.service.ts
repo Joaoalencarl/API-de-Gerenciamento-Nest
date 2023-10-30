@@ -12,10 +12,11 @@ export class EmployeeService {
   ) {}
 
   async create(user_id: number, createEmployeeDto: CreateEmployeeDto) {
+    const playfabid = this.playfab.getTitleId(createEmployeeDto.email);
     return this.prisma.employee.create({
       data: {
         ...createEmployeeDto,
-        playfab_id: await this.playfab.getTitleId(createEmployeeDto.email),
+        playfab_id: playfabid.toString(),
         url_img: Buffer.from(createEmployeeDto.url_img),
         user: { connect: { id: user_id } },
       },
@@ -47,6 +48,12 @@ export class EmployeeService {
     return this.prisma.employee.update({
       where: { id: employe_id },
       data: { ...updateEmployeeDto },
+    });
+  }
+
+  async delete(employe_id: number) {
+    return this.prisma.employee.delete({
+      where: { id: employe_id },
     });
   }
 }

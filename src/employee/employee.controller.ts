@@ -1,6 +1,7 @@
 import {
   Body,
   Controller,
+  Delete,
   Get,
   Param,
   Patch,
@@ -66,5 +67,11 @@ export class EmployeeController {
     await this.middleware.haveEmployee(employe_id);
     await this.middleware.verifyUpdate(updateEmployeeDto);
     return this.employeeService.update(employe_id, updateEmployeeDto);
+  }
+
+  @Delete('delete/:employe_id')
+  async delete(@Param('employe_id') employe_id: number) {
+    await this.middleware.haveEmployee(employe_id);
+    return this.employeeService.delete(employe_id);
   }
 }

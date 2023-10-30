@@ -46,6 +46,7 @@ export class UserService {
   }
 
   async remove(id: number) {
+    await this.prisma.employee.deleteMany({ where: { user_id: id } });
     return this.prisma.user.delete({ where: { id } });
   }
 }
