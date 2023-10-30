@@ -1,6 +1,3 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
 generator client {
   provider = "prisma-client-js"
 }
@@ -11,18 +8,14 @@ datasource db {
 }
 
 model User {
-  id Int @id @default(autoincrement())
-
-  // profile
+  id           Int         @id @default(autoincrement())
   company_name String
   fantasy_name String?
-  cnpj         String   @unique
-  email        String   @unique
+  cnpj         String      @unique
+  email        String      @unique
   password     String
   segment      String
   userType     UserType
-
-  // address
   cep          String?
   number       String?
   city         String?
@@ -30,11 +23,63 @@ model User {
   neighborhood String?
   street       String?
   phone        String
+  challenges   Challenge[]
+  employees    Employee[]
+  gruops       Group[]
+}
 
-  // relations
-  employees  Employee[]
-  gruops     Group[]
-  challenges Challenge[]
+model Employee {
+  id          Int        @id @default(autoincrement())
+  playfab_id  String?
+  name        String
+  email       String     @unique
+  cpf         String     @unique
+  birth_date  DateTime
+  sex         Sex
+  url_img     Bytes?
+  user_id     Int
+  group_id    Int?
+  recorded_at DateTime   @default(now())
+  activities  Activity[]
+  group       Group?     @relation(fields: [group_id], references: [id])
+  user        User       @relation(fields: [user_id], references: [id])
+}
+
+model Activity {
+  id          Int      @id @default(autoincrement())
+  time        Int
+  distance    Float
+  rhythm      Float
+  calories    Float
+  employee_id Int
+  date        DateTime @default(now())
+  employee    Employee @relation(fields: [employee_id], references: [id])
+}
+
+model Challenge {
+  id          Int           @id @default(autoincrement())
+  days        Int
+  distance    Float
+  url_img     Bytes?
+  reward_msg  String?
+  expires_at  DateTime
+  type        ChallengeType
+  has_started Boolean       @default(false)
+  has_reward  Boolean       @default(false)
+  user_id     Int
+  created_at  DateTime      @default(now())
+  user        User          @relation(fields: [user_id], references: [id])
+}
+
+model Group {
+  id          Int        @id @default(autoincrement())
+  name        String
+  description String?
+  url_img     Bytes?
+  user_id     Int
+  recorded_at DateTime   @default(now())
+  members     Employee[]
+  user        User       @relation(fields: [user_id], references: [id])
 }
 
 enum UserType {
@@ -43,103 +88,13 @@ enum UserType {
   PARTNER
 }
 
-// --> USER_TYPE = COMPANY
-
-model Employee {
-  id         Int  @id @default(autoincrement())
-  playfab_id Int?
-
-  // profile
-  name       String
-  email      String   @unique
-  cpf        String   @unique
-  birth_date DateTime
-  sex        Sex
-  url_img    Bytes?
-
-  // relations
-  activities Activity[]
-
-  user_id  Int
-  user     User  @relation(fields: [user_id], references: [id])
-  group_id Int?
-  group    Group? @relation(fields: [group_id], references: [id])
-
-  // recorded
-  recorded_at DateTime @default(now())
-}
-
 enum Sex {
   MALE
   FEMALE
   OTHER
 }
 
-// EMPLOYEE --> ACTIVITIES
-
-model Activity {
-  id Int @id @default(autoincrement())
-
-  // profile
-  time     Int
-  distance Float
-  rhythm   Float
-  calories Float
-
-  // relations
-  employee_id Int
-  employee    Employee @relation(fields: [employee_id], references: [id])
-
-
-  // recorded
-  date DateTime @default(now())
-}
-
-// COMPANYS --> CHALLENGES TO EMPLOYEES
-
-model Challenge {
-  id Int @id @default(autoincrement())
-
-  // profile
-  days       Int
-  distance   Float
-  url_img    Bytes?
-  reward_msg String?
-  expires_at DateTime
-  type       ChallengeType
-
-  // boolean
-  has_started Boolean @default(false)
-  has_reward  Boolean @default(false)
-
-  // relations
-  user_id Int
-  user    User   @relation(fields: [user_id], references: [id])
-
-  // recorded
-  created_at DateTime @default(now())
-}
-
 enum ChallengeType {
   DISTANCE
   TIME
-}
-
-// USER_TYPE = COMPANY CAN CREATE GROUP TO EMPLOYEES
-
-model Group {
-  id      Int @id @default(autoincrement())
-
-  name        String
-  description String?
-  url_img     Bytes?
-
-  // relations
-  members Employee[]
-  
-  user_id Int
-  user   User   @relation(fields: [user_id], references: [id])
-  
-  // recorded
-  recorded_at DateTime @default(now())
 }
