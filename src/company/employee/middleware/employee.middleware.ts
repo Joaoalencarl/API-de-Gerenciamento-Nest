@@ -40,13 +40,13 @@ export class EmployeeMiddleware {
   }
 
   async haveEmployee(id: number) {
-    if (
-      !(await this.prisma.employee.findUnique)({
-        where: { id },
-      })
-    ) {
+    const employee = await this.prisma.employee.findUnique({
+      where: { id },
+    });
+
+    if (!employee) {
       throw new HttpException(
-        'Não existe um funcionário cadastrado com esse id',
+        'O funcionário informado não foi encontrado',
         HttpStatus.BAD_REQUEST,
       );
     }
