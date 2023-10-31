@@ -48,6 +48,7 @@ export class UserService {
   async remove(id: number) {
     await this.prisma.employee.deleteMany({ where: { user_id: id } });
     await this.prisma.group.deleteMany({ where: { user_id: id } });
+    await this.prisma.challenge.deleteMany({ where: { user_id: id } });
     return this.prisma.user.delete({ where: { id } });
   }
 }

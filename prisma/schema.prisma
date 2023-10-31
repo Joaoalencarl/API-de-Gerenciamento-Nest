@@ -67,8 +67,8 @@ model Challenge {
   has_started Boolean       @default(false)
   has_reward  Boolean       @default(false)
   user_id     Int
-  created_at  DateTime      @default(now())
   user        User          @relation(fields: [user_id], references: [id])
+  created_at  DateTime      @default(now())
 }
 
 model Group {
