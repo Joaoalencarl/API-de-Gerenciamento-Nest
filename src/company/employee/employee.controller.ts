@@ -10,7 +10,7 @@ import {
   UseInterceptors,
 } from '@nestjs/common';
 import { EmployeeService } from './employee.service';
-import { CreateEmployeeDto } from './dto/create-employee.dto';
+import { ActivityModel, CreateEmployeeDto } from './dto/create-employee.dto';
 import { EmployeeMiddleware } from './middleware/employee.middleware';
 import { UserMiddleware } from 'src/user/middleware/user.middleware';
 import { FileInterceptor } from '@nestjs/platform-express';
@@ -25,6 +25,8 @@ export class EmployeeController {
     private userMiddleware: UserMiddleware,
     private playFab: PlayFabMiddleware,
   ) {}
+
+  //CRUD
 
   @Post('create/:user_id')
   @UseInterceptors(FileInterceptor('url_img'))
@@ -73,5 +75,16 @@ export class EmployeeController {
   async delete(@Param('employe_id') employe_id: number) {
     await this.middleware.haveEmployee(employe_id);
     return this.employeeService.delete(employe_id);
+  }
+
+  //PLAYFAB
+
+  @Post('add/activity/:employe_id')
+  async addActivity(
+    @Param('employe_id') employe_id: number,
+    @Body() activity: ActivityModel,
+  ) {
+    await this.middleware.haveEmployee(employe_id);
+    return this.employeeService.addActivity(employe_id, activity);
   }
 }

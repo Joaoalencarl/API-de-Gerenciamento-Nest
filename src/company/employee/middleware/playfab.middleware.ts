@@ -27,11 +27,9 @@ export class PlayFabMiddleware {
 
   async getTitleId(email: string) {
     const segment = await this.getPlayersInSegment(process.env.SEGMENT_ID);
-    console.log(
-      segment.PlayerProfiles.find(
-        (player) =>
-          player.ContactEmailAddresses.map((e) => e.EmailAddress)[0] === email,
-      ).PlayerId,
-    );
+    return segment.PlayerProfiles.find(
+      (player) =>
+        player.ContactEmailAddresses.map((e) => e.EmailAddress)[0] === email,
+    ).PlayerId;
   }
 }

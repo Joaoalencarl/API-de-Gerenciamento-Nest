@@ -25,3 +25,17 @@ export class CreateEmployeeDto {
   @IsOptional()
   url_img: Buffer | null;
 }
+
+export class ActivityModel {
+  @IsNotEmpty()
+  time: number;
+
+  @IsNotEmpty()
+  distance: number;
+
+  @IsNotEmpty()
+  rhythm: number;
+
+  @IsNotEmpty()
+  calories: number;
+}

@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
-import { CreateEmployeeDto } from './dto/create-employee.dto';
+import { ActivityModel, CreateEmployeeDto } from './dto/create-employee.dto';
 import { PlayFabMiddleware } from './middleware/playfab.middleware';
 import { UpdateEmployeeDto } from './dto/update-employee.dto';
 
@@ -54,6 +54,15 @@ export class EmployeeService {
   async delete(employe_id: number) {
     return this.prisma.employee.delete({
       where: { id: employe_id },
+    });
+  }
+
+  async addActivity(employe_id: number, activity: ActivityModel) {
+    return this.prisma.activity.create({
+      data: {
+        ...activity,
+        employee: { connect: { id: employe_id } },
+      },
     });
   }
 }

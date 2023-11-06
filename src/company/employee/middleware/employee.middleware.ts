@@ -41,7 +41,7 @@ export class EmployeeMiddleware {
 
   async haveEmployee(id: number) {
     const employee = await this.prisma.employee.findUnique({
-      where: { id },
+      where: { id: id },
     });
 
     if (!employee) {
@@ -50,6 +50,8 @@ export class EmployeeMiddleware {
         HttpStatus.BAD_REQUEST,
       );
     }
+
+    // erro de identificação, função não está sendo usada corretamente
     if (!id) {
       throw new HttpException(
         'O id do funcionário não foi informado',
@@ -90,5 +92,19 @@ export class EmployeeMiddleware {
     }
 
     return cpf.format(data.cpf);
+  }
+
+  async verifyPlayerId(playfab_id: string) {
+    const user = await this.prisma.employee.findUnique({
+      where: { playfab_id: playfab_id },
+    });
+    if (!user) {
+      throw new HttpException(
+        'O funcionário informado não foi encontrado',
+        HttpStatus.BAD_REQUEST,
+      );
+    } else {
+      return user;
+    }
   }
 }
