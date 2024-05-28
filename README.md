@@ -1,6 +1,6 @@
-# Mascot Fit REST API
+# Gerenciamento de Usuário REST API
 
-Mascotfit Application Web Application Backend Services
+Web Application Backend Services
 
 ## Tech Stack
 
