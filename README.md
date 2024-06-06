@@ -11,13 +11,13 @@ Web Application Backend Services
 clone this repository
 
 ```bash
-    git clone https://github.com/Joaoalencarl/mascotfit-api.git
+    git clone [https://github.com/Joaoalencarl/mascotfit-api.git](https://github.com/Joaoalencarl/API-de-Gerenciamento-Nest.git)
 ```
 
 install with npm
 
 ```bash
-    cd mascotfit_api
+    cd API-de-Gerenciamento-Nest
     npm install
 ```
 init docker
